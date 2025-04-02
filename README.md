@@ -53,7 +53,8 @@ sudo add-apt-repository ppa:pistache+team/stable
 sudo apt update
 
 # download pistache binary and headers
-sudo apt install libpistache-dev
+# download pkg-config required by cmake
+sudo apt install libpistache-dev pkg-config
 
 # make build dir
 mkdir build

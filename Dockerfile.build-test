@@ -1,0 +1,48 @@
+# Match my machine ubuntu
+FROM ubuntu:24.04
+
+# Avoid prompts from apt
+ENV DEBIAN_FRONTEND=noninteractive
+
+# If this builds and starts the server, then the code should work on real
+# ubuntu machines as well.
+
+# Required to add new repository
+RUN apt-get update && apt-get install -y \
+    software-properties-common
+
+# Add repository
+RUN add-apt-repository ppa:pistache+team/stable
+
+RUN apt-get update && apt-get install -y \
+    g++ \
+    cmake \
+    # Get headers and built libraries for Pistache
+    libpistache-dev
+
+RUN apt-get install -y \
+    # Required by CMAKE to fix error: pkg-config tool not found
+    pkg-config
+
+RUN g++ --version && \
+    cmake --version && \
+    # Find header files
+    find /usr/include -name "*pistache*" && \
+    # Find library files
+    find /usr/lib -name "*pistache*"
+
+WORKDIR /project
+
+# Copy project files
+COPY CMakeLists.txt main.cpp ./
+
+# Create build directory and build the project
+RUN mkdir build && \
+    cd build && \
+    # see what's actually happening
+    cmake -DCMAKE_VERBOSE_MAKEFILE=ON .. && \
+    # Use all CPU cores for parallel compilation
+    cmake --build . -j$(nproc) && \
+    cd ..
+
+CMD ["./build/use-pistache"]
