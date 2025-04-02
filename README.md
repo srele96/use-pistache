@@ -82,7 +82,11 @@ cmake --build .
 ./use-pistache
 ```
 
-### If curious
+## Explanation of how Dockerfile tests the build
+
+[Dockerfile build test](./Dockerfile-build-test.md)
+
+## If curious
 
 Here is how you can find statically and dynamically built library downloaded via `sudo apt install libpistache-dev`. Here are also the headers. CMake is used to find the headers and library, link it, and allow our cpp files to include the headers.
 
